@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <gconio.h>
 #include "graph.h"
 
@@ -22,25 +23,40 @@ void readGraph(/* Passar o nome do arquivo por parâmetro*/) {
 
   i = 0;
 
+  fgets(Line, sizeof(Line), file);
+  int num_vertex = atoi(Line);
+  struct graph* graph = create_graph(num_vertex);
+
+  i++;
+
   while (!feof(file))
   {
-	// Lê uma linha (inclusive com o '\n')
-      result = fgets(Line, 1000, file);  // o 'fgets' lê até 999 caracteres ou até o '\n'
-      if (result)
-        if (i == 0) { // Se foi possível ler
-          int num_vertex = atoi(Line);
-          printf("%d\n", num_vertex);
-	        // printf("Line %d : %s",i,Line);
+    result = fgets(Line, 1000, file);
+    if (result && i > 0)
+    {
+      for (int j = 0; j < 1000; j++)
+      {
+        if (Line[j] == '1')
+        {
+          add_edge(graph, i, j);
         }
-      i++;
-  }
+      } // Percorre as colunas
+    }
+    i++;
+  } // Percorre as colunas do arquivo
+
+  print_adj_list(graph);
 
   fclose(file);
-}
 
-void main()
+  return;
+} 
+
+int main()
 {
   readGraph();
+
+  return 0;
 }
 
 

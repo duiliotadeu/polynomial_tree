@@ -40,10 +40,10 @@ void add_edge(struct graph* graph, int vertex1, int vertex2) {
     graph->vertex[vertex1].neighbors = new_neighbor;
 
     // Adicionando vertex1 na lista de vizinhos de vertex2 (considerando que o grafo não é direcionado)
-    new_neighbor = (struct neighbor*) malloc(sizeof(struct neighbor));
+    /* new_neighbor = (struct neighbor*) malloc(sizeof(struct neighbor));
     new_neighbor->vertex_index = vertex1;
     new_neighbor->next = graph->vertex[vertex2].neighbors;
-    graph->vertex[vertex2].neighbors = new_neighbor;
+    graph->vertex[vertex2].neighbors = new_neighbor; */
 }
 
 // Função para imprimir a lista de adjacência do grafo
