@@ -1,25 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 // #include "tree.h"
 #include "graph.h"
 
+char* reading() {
+    char* fileName = malloc(sizeof(char) * 100);
+    printf("Digite o nome do arquivo (max. 100 caracteres): ");
+    fgets(fileName, 100, stdin);
+    fileName[strcspn(fileName, "\n")] = '\0'; // Remove o caractere '\n' do final da string
+    return fileName;
+}
+
 int main() {
-    int num_vertex = 6;
-    struct graph* graph = create_graph(num_vertex);
-
-    // Adicionando arestas ao grafo
-    add_edge(graph, 0, 1);
-    add_edge(graph, 0, 4);
-    add_edge(graph, 1, 2);
-    add_edge(graph, 1, 3);
-    add_edge(graph, 1, 4);
-    add_edge(graph, 2, 3);
-    add_edge(graph, 3, 4);
-    add_edge(graph, 4, 5);
-
-    // Imprimindo a lista de adjacência do grafo
+    char* fileName = reading();
+    struct graph* graph = readGraph(fileName);
+    free(fileName);
     print_adj_list(graph);
-
     return 0;
 }

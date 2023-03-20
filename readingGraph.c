@@ -1,46 +1,65 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <gconio.h>
+#include <string.h>
 #include "graph.h"
 
-// Já é possível abrir o arquivo e ler o número de vértices.
-
-void readGraph(/* Passar o nome do arquivo por parâmetro*/) {
+struct graph* readGraph(char fileN) {
   FILE *file;
   char Line[1000];
   char *result;
   int i;
-  clrscr();
+
+  char fileName[] = "./novos_exemplos/";
+  char str[] = ".txt";
+    
+  strcat(fileName, fileN);
+  strcat(fileName, str);
 
   // Abre um arquivo TEXTO para LEITURA
-  file = fopen("./novos_exemplos/ex1.txt", "rt");
+  file = fopen(fileName, "rt");
   if (file == NULL)  // Se houve erro na abertura
   {
      printf("Problemas na abertura do arquivo\n");
-     return;
+     return 0;
   }
 
   i = 0;
 
+  // Lê o número de vértices do grafo da primeira linha do arquivo e gera o grafo.
+  result = fgets(Line, 1000, file);
+  int num_vertex = atoi(Line);
+  struct graph* graph = create_graph(num_vertex);
+  if (graph == NULL)  // Se houve erro na abertura
+  {
+     printf("Não foi possível gerar o grafo\n");
+     return 0;
+  }
+
+  i++;
+
+  // Percorre as demais linhas do arquivo incluindo as conexões nos vertices existentes.
   while (!feof(file))
   {
-	// Lê uma linha (inclusive com o '\n')
-      result = fgets(Line, 1000, file);  // o 'fgets' lê até 999 caracteres ou até o '\n'
+      result = fgets(Line, 1000, file);
       if (result)
-        if (i == 0) { // Se foi possível ler
-          int num_vertex = atoi(Line);
-          printf("%d\n", num_vertex);
-	        // printf("Line %d : %s",i,Line);
+      {
+        int col = 0;
+        for(int j = 0; Line[j] != '\0'; j++) 
+        {
+          if(Line[j] == '1')
+          {
+            int k = i-1;
+            add_edge(graph, k, col);
+          }
+          if(Line[j] == '0' || Line[j] == '1')
+            col++;
         }
+      }
       i++;
   }
 
   fclose(file);
-}
-
-void main()
-{
-  readGraph();
+  return graph;
 }
 
 
