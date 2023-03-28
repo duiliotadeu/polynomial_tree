@@ -6,7 +6,7 @@
 struct Node
 {
     int num;
-    graph graph;
+    struct graph* graph;
     struct Node *left;
     struct Node *right;
 };
