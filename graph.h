@@ -181,6 +181,7 @@ void delete_adj_vertex(struct graph* graph, int vertex_index) {
         current_neighbor = current_neighbor->next;
     }
 }
+
 void copy_graph(struct graph* source_graph, struct graph** target_graph_ptr) {
     // Criando o grafo alvo
     struct graph* target_graph = create_graph(source_graph->num_vertex);
@@ -213,4 +214,25 @@ void copy_graph(struct graph* source_graph, struct graph** target_graph_ptr) {
     
     // Atribuindo o grafo alvo ao ponteiro fornecido
     *target_graph_ptr = target_graph;
+}
+
+void deallocate_graph(struct graph* g) {
+    // Desaloca a memória de cada vértice
+    for (int i = 0; i < g->num_vertex; i++) {
+        struct vertex* v = &(g->vertex[i]);
+        struct neighbor* n = v->neighbors;
+        
+        // Desaloca a memória de cada vizinho
+        while (n != NULL) {
+            struct neighbor* next = n->next;
+            free(n);
+            n = next;
+        }
+    }
+    
+    // Desaloca a memória dos vértices
+    free(g->vertex);
+    
+    // Desaloca a memória do grafo
+    free(g);
 }

@@ -22,14 +22,14 @@ void maximals(struct graph* graph) {
         copy_graph(graph, &graph_s1);
         delete_vertex(graph_s1, vertex_index);
         maximals(graph_s1);
-        free(graph_s1);
+        deallocate_graph(graph_s1);
 
         // Passo 2
         struct graph* graph_s2 = (struct graph*) malloc(sizeof(struct graph));
         copy_graph(graph, &graph_s2);
         delete_adj_vertex(graph_s2, vertex_index);
         maximals(graph_s2);
-        free(graph_s2);
+        deallocate_graph(graph_s2);
     } else
     {
         print_adj_list(graph);
