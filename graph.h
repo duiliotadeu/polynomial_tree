@@ -151,25 +151,23 @@ void delete_vertex(struct graph* graph, int vertex_index) {
         int neighbor_index = current_neighbor->vertex_index;
         struct neighbor* next_neighbor = current_neighbor->next;
         struct neighbor* previous_neighbor = NULL;
-        struct neighbor* current_neighbor2 = graph->vertex[neighbor_index].neighbors;
-        while (current_neighbor2 != NULL) {
-            // Quando encontra o vértice a ser deletado na lista de vizinhos do vizinho, o remove
-            if (current_neighbor2->vertex_index == vertex_index) {
-                if (previous_neighbor == NULL) {
-                    graph->vertex[neighbor_index].neighbors = current_neighbor2->next;
-                } else {
-                    previous_neighbor->next = current_neighbor2->next;
-                }
-                free(current_neighbor2);
-                break;
-            }
-            previous_neighbor = current_neighbor2;
-            current_neighbor2 = current_neighbor2->next;
+        struct neighbor* neighbor = graph->vertex[neighbor_index].neighbors;
+        while (neighbor != NULL && neighbor->vertex_index != vertex_index) {
+            previous_neighbor = neighbor;
+            neighbor = neighbor->next;
         }
-        free(current_neighbor);
+        if (neighbor != NULL) { // encontrou a aresta que liga o vizinho ao vértice a ser deletado
+            if (previous_neighbor == NULL) { // o vizinho é o primeiro da lista de vizinhos
+                graph->vertex[neighbor_index].neighbors = neighbor->next;
+            } else { // o vizinho não é o primeiro da lista de vizinhos
+                previous_neighbor->next = neighbor->next;
+            }
+            free(neighbor); // libera a memória alocada para a aresta
+        }
         current_neighbor = next_neighbor;
     }
-    // Define o ponteiro de vizinhos do vértice a ser deletado como NULL e seu campo "valid" como falso
+    // Remove o próprio vértice
+    free(graph->vertex[vertex_index].neighbors);
     graph->vertex[vertex_index].neighbors = NULL;
     graph->vertex[vertex_index].valid = false;
 }
@@ -235,4 +233,28 @@ void deallocate_graph(struct graph* g) {
     
     // Desaloca a memória do grafo
     free(g);
+}
+
+int vertex_with_most_neighbors(struct graph* g) {
+    int max_neighbors = 0;
+    int vertex_with_max_neighbors = -1;
+
+    for (int i = 0; i < g->num_vertex; i++) {
+        if (!g->vertex[i].valid) continue;
+
+        int count = 0;
+        struct neighbor* curr = g->vertex[i].neighbors;
+
+        while (curr) {
+            count++;
+            curr = curr->next;
+        }
+
+        if (count > max_neighbors) {
+            max_neighbors = count;
+            vertex_with_max_neighbors = i;
+        }
+    }
+
+    return vertex_with_max_neighbors;
 }
