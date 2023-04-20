@@ -214,10 +214,10 @@ void copy_graph(struct graph* source_graph, struct graph** target_graph_ptr) {
     *target_graph_ptr = target_graph;
 }
 
-void deallocate_graph(struct graph* g) {
+void deallocate_graph(struct graph* graph) {
     // Desaloca a memória de cada vértice
-    for (int i = 0; i < g->num_vertex; i++) {
-        struct vertex* v = &(g->vertex[i]);
+    for (int i = 0; i < graph->num_vertex; i++) {
+        struct vertex* v = &(graph->vertex[i]);
         struct neighbor* n = v->neighbors;
         
         // Desaloca a memória de cada vizinho
@@ -229,21 +229,21 @@ void deallocate_graph(struct graph* g) {
     }
     
     // Desaloca a memória dos vértices
-    free(g->vertex);
+    free(graph->vertex);
     
     // Desaloca a memória do grafo
-    free(g);
+    free(graph);
 }
 
-int vertex_with_most_neighbors(struct graph* g) {
+int vertex_with_most_neighbors(struct graph* graph) {
     int max_neighbors = 0;
     int vertex_with_max_neighbors = -1;
 
-    for (int i = 0; i < g->num_vertex; i++) {
-        if (!g->vertex[i].valid) continue;
+    for (int i = 0; i < graph->num_vertex; i++) {
+        if (!graph->vertex[i].valid) continue;
 
         int count = 0;
-        struct neighbor* curr = g->vertex[i].neighbors;
+        struct neighbor* curr = graph->vertex[i].neighbors;
 
         while (curr) {
             count++;
