@@ -83,7 +83,7 @@ struct graph* readGraph(const char* nome) {
   strcat(nomeDoArquivo, str);
 
   // Abre um arquivo TEXTO para LEITURA
-  file = fopen(nomeDoArquivo, "rt");
+  file = fopen("./novos_exemplos/ex1.txt", "rt");
   if (file == NULL)  // Se houve erro na abertura
   {
      printf("Problemas na abertura do arquivo\n");
@@ -144,7 +144,6 @@ int adjacency_list_not_empty(struct graph* graph) {
 }
 
 void delete_vertex(struct graph* graph, int vertex_index) {
-    // Percorre a lista de vizinhos do vértice a ser deletado
     struct neighbor* current_neighbor = graph->vertex[vertex_index].neighbors;
     while (current_neighbor != NULL) {
         // Para cada vizinho, percorre a lista de vizinhos desse vizinho
@@ -173,6 +172,7 @@ void delete_vertex(struct graph* graph, int vertex_index) {
 }
 
 void delete_adj_vertex(struct graph* graph, int vertex_index) {
+    printf("delete_adj_vertex: %d\n", vertex_index);
     struct neighbor* current_neighbor = graph->vertex[vertex_index].neighbors;
     while (current_neighbor != NULL) {
         delete_vertex(graph, current_neighbor->vertex_index);

@@ -30,7 +30,6 @@ void maximals(struct graph* graph) {
             struct graph* graph_sk = (struct graph*) malloc(sizeof(struct graph));
             copy_graph(graph, &graph_sk);
             delete_adj_vertex(graph_sk, current_neighbor->vertex_index);
-            delete_vertex(graph_sk, vertex_index);
             maximals(graph_sk);
             deallocate_graph(graph_sk);
             current_neighbor = current_neighbor->next;
