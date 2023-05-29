@@ -41,24 +41,45 @@ graph_t* graph_copy(graph_t* graph) {
     return new_graph;
 }
 
-void graph_delete_edges_of_vertex(graph_t *g, int v) {
+void delete_edges(graph_t *g, int v) {
     int i;
-    set_t *edges_v = g->edges[v];
-    // WARNING: Tipos incompatíveis?
+    
+    for (i = 0; i < g->n; i++) {
+        if (i != v) {
+            GRAPH_DEL_EDGE(g, i, v);
+        }
+    }
 }
 
+void delete_neighbors_edges(graph_t *g, int v) {
+    set_t edges = g->edges[v];
+    for (int i = 0; i < g->n; i++) {
+        if (SET_CONTAINS(edges, i)) {
+            delete_edges(g, i);
+        }
+    }
+}
 
 int main () {
     graph_t *g = graph_read_dimacs_file("ex1_new.col");
     int vertex = graph_find_vertex_with_max_edges(g);
-
-    if (!graph_is_empty(g))
-    {
+    
+    if (!graph_is_empty(g)) {
         // Passo 1
         graph_t *g1 = graph_copy(g);
+        delete_neighbors_edges(g1, vertex);
         graph_print(g1);
+        graph_free(g1);
+
+        for (int i = 0; i < g->n; i++) {
+            graph_t *g2 = graph_copy(g);
+            if (SET_CONTAINS(g2->edges[vertex], i)) {
+                delete_neighbors_edges(g2, i);
+                graph_print(g2);
+            }
+            graph_free(g2);
+        }
     }
-    
 
     graph_free(g);
 
