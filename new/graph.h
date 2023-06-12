@@ -8,9 +8,9 @@ typedef struct _graph_t graph_t;
 struct _graph_t {
 	int n;             /* Vertices numbered 0...n-1 */
 	set_t *edges;      /* A list of n sets (the edges). */
+	set_t valid_vertex; /* Lista de vértices válidos */
 	int *weights;      /* A list of n vertex weights. */
 };
-
 
 #define GRAPH_IS_EDGE_FAST(g,i,j)  (SET_CONTAINS_FAST((g)->edges[(i)],(j)))
 #define GRAPH_IS_EDGE(g,i,j) (((i)<((g)->n))?SET_CONTAINS((g)->edges[(i)], \

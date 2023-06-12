@@ -2,7 +2,7 @@
 /*
  * This file contains the graph handling routines.
  *
- * Copyright (C) 2002 Sampo Niskanen, Patric �sterg�rd.
+ * Copyright (C) 2002 Sampo Niskanen, Patric �sterg�rd.
  * Licensed under the GNU GPL, read the file LICENSE for details.
  */
 
@@ -313,6 +313,7 @@ graph_t *graph_read_dimacs_file(char *file) {
 	}
 	g=graph_read_dimacs(fp);
 	fclose(fp);
+
 	return g;
 }
 
@@ -343,6 +344,12 @@ graph_t *graph_read_dimacs(FILE *fp) {
 	} else {
 		g=graph_read_dimacs_binary(fp,buffer);
 	}
+	
+	g->valid_vertex = set_new(g->n);
+	for (int i = 0; i < g->n; i++) {
+		SET_ADD_ELEMENT(g->valid_vertex, i);
+	} // Inicialização da estrutura valid_vertex.
+
 	return g;
 }	
 
@@ -555,84 +562,87 @@ static graph_t *graph_read_dimacs_ascii(FILE *fp, char *firstline) {
  * of all vertices it is adjacent to.
  */
 void graph_print(graph_t *g) {
-	int i,j;
-	int asymm=0;
-	int refl=0;
-	int nonpos=0;
-	int extra=0;
-	unsigned int weight=0;
-	boolean weighted;
-	
-	ASSERT((sizeof(setelement)*8)==ELEMENTSIZE);
+    int i, j;
+    int asymm = 0;
+    int refl = 0;
+    int nonpos = 0;
+    int extra = 0;
+    unsigned int weight = 0;
+    boolean weighted;
 
-	if (g==NULL) {
-		printf("   WARNING: Graph pointer is NULL!\n");
-		return;
-	}
-	if (g->n <= 0) {
-		printf("   WARNING: Graph has %d vertices "
-		       "(should be positive)!\n",g->n);
-		return;
-	}
-	
-	weighted=graph_weighted(g);
+    ASSERT((sizeof(setelement) * 8) == ELEMENTSIZE);
 
-	printf("%s graph has %d vertices, %d edges (density %.2f).\n",
-	       weighted?"Weighted":((g->weights[0]==1)?
-				    "Unweighted":"Semi-weighted"),
-	       g->n,graph_edge_count(g),
-	       (float)graph_edge_count(g)/((float)(g->n - 1)*(g->n)/2));
+    if (g == NULL) {
+        printf("   WARNING: Graph pointer is NULL!\n");
+        return;
+    }
+    if (g->n <= 0) {
+        printf("   WARNING: Graph has %d vertices "
+               "(should be positive)!\n", g->n);
+        return;
+    }
 
-	for (i=0; i < g->n; i++) {
-		printf("%2d",i);
-		if (weighted) {
-			printf(" w=%d",g->weights[i]);
-			if (g->weights[i] <= 0) {
-				printf("*NON-POSITIVE*");
-				nonpos++;
-			}
-		}
-		if (weight < INT_MAX)
-			weight+=g->weights[i];
-		printf(" ->");
-		for (j=0; j < g->n; j++) {
-			if (SET_CONTAINS_FAST(g->edges[i],j)) {
-				printf(" %d",j);
-				if (i==j) {
-					printf("*REFLEXIVE*");
-					refl++;
-				}
-				if (!SET_CONTAINS_FAST(g->edges[j],i)) {
-					printf("*ASYMMERTIC*");
-					asymm++;
-				}
-			}
-		}
-		for (j=g->n; j < SET_ARRAY_LENGTH(g->edges[i])*ELEMENTSIZE;
-		     j++) {
-			if (SET_CONTAINS_FAST(g->edges[i],j)) {
-				printf(" %d*NON-EXISTENT*",j);
-				extra++;
-			}
-		}
-		printf("\n");
-	}
+    weighted = graph_weighted(g);
 
-	if (asymm)
-		printf("   WARNING: Graph contained %d asymmetric edges!\n",
-		       asymm);
-	if (refl)
-		printf("   WARNING: Graph contained %d reflexive edges!\n",
-		       refl);
-	if (nonpos)
-		printf("   WARNING: Graph contained %d non-positive vertex "
-		       "weights!\n",nonpos);
-	if (extra)
-		printf("   WARNING: Graph contained %d edges to "
-		       "non-existent vertices!\n",extra);
-	if (weight>=INT_MAX)
-		printf("   WARNING: Total graph weight >= INT_MAX!\n");
-	return;
+    printf("%s graph has %d vertices, %d edges (density %.2f).\n",
+           weighted ? "Weighted" : ((g->weights[0] == 1) ?
+                                    "Unweighted" : "Semi-weighted"),
+           g->n, graph_edge_count(g),
+           (float)graph_edge_count(g) / ((float)(g->n - 1) * (g->n) / 2));
+
+    for (i = 0; i < g->n; i++) {
+        if (!SET_CONTAINS_FAST(g->valid_vertex, i)) {
+            continue; // Ignorar vértices que não pertencem a valid_vertex
+        }
+
+        printf("%2d", i);
+        if (weighted) {
+            printf(" w=%d", g->weights[i]);
+            if (g->weights[i] <= 0) {
+                printf("*NON-POSITIVE*");
+                nonpos++;
+            }
+        }
+        if (weight < INT_MAX)
+            weight += g->weights[i];
+        printf(" ->");
+        for (j = 0; j < g->n; j++) {
+            if (SET_CONTAINS_FAST(g->edges[i], j)) {
+                printf(" %d", j);
+                if (i == j) {
+                    printf("*REFLEXIVE*");
+                    refl++;
+                }
+                if (!SET_CONTAINS_FAST(g->edges[j], i)) {
+                    printf("*ASYMMETRIC*");
+                    asymm++;
+                }
+            }
+        }
+        for (j = g->n; j < SET_ARRAY_LENGTH(g->edges[i]) * ELEMENTSIZE; j++) {
+            if (SET_CONTAINS_FAST(g->edges[i], j)) {
+                printf(" %d*NON-EXISTENT*", j);
+                extra++;
+            }
+        }
+        printf("\n");
+    }
+
+    if (asymm)
+        printf("   WARNING: Graph contained %d asymmetric edges!\n",
+               asymm);
+    if (refl)
+        printf("   WARNING: Graph contained %d reflexive edges!\n",
+               refl);
+    if (nonpos)
+        printf("   WARNING: Graph contained %d non-positive vertex "
+               "weights!\n", nonpos);
+    if (extra)
+        printf("   WARNING: Graph contained %d edges to "
+               "non-existent vertices!\n", extra);
+    if (weight >= INT_MAX)
+        printf("   WARNING: Total graph weight >= INT_MAX!\n");
+    return;
 }
 
 

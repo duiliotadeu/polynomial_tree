@@ -36,7 +36,7 @@ void maximals(struct graph* graph) {
         }
     } else
     {
-        print_adj_list(graph);
+        // print_adj_list(graph);
     }
 }
 

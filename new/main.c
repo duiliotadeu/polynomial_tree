@@ -2,10 +2,17 @@
 #include <stdlib.h>
 
 #include "graph.h"
+#include "node.h"
 
-// Entender a alocação do grafo; X
-// Entender a estrutura de dados do grafo; X
-// Entender a estrutura de dados dos sets; X
+/* 
+    ANOTAÇÕES
+
+    Comparar os conjuntos utilizando a união e a intersecção. ?
+    Pensar no número de casos gerados pelo algoritmo no pior caso. 
+        Parece ser algo próximo de 2^n ainda.
+*/
+
+node_t* list_printed_graphs = NULL;
 
 int graph_find_vertex_with_max_edges(graph_t* graph) {
     int max_edges = 0;
@@ -26,18 +33,18 @@ boolean graph_is_empty(graph_t* graph) {
     return (graph_edge_count(graph) == 0);
 }
 
-
 graph_t* graph_copy(graph_t* graph) {
     graph_t* new_graph = graph_new(graph->n); 
     
     for (int i = 0; i < graph->n; i++) {
         new_graph->edges[i] = set_copy(NULL, graph->edges[i]);
     }
+
+    new_graph->valid_vertex = set_copy(NULL, graph->valid_vertex);
     
     // for (int i = 0; i < graph->n; i++) {
     //     new_graph->weights[i] = graph->weights[i];
-    // }
-    
+
     return new_graph;
 }
 
@@ -56,31 +63,44 @@ void delete_neighbors_edges(graph_t *g, int v) {
     for (int i = 0; i < g->n; i++) {
         if (SET_CONTAINS(edges, i)) {
             delete_edges(g, i);
+            SET_DEL_ELEMENT(g->valid_vertex, i);
         }
     }
 }
 
-int main () {
-    graph_t *g = graph_read_dimacs_file("ex1_new.col");
+void maximals(graph_t *g) {
     int vertex = graph_find_vertex_with_max_edges(g);
     
     if (!graph_is_empty(g)) {
         // Passo 1
         graph_t *g1 = graph_copy(g);
         delete_neighbors_edges(g1, vertex);
-        graph_print(g1);
+        maximals(g1);
         graph_free(g1);
 
+        // Passo 2
         for (int i = 0; i < g->n; i++) {
             graph_t *g2 = graph_copy(g);
             if (SET_CONTAINS(g2->edges[vertex], i)) {
                 delete_neighbors_edges(g2, i);
-                graph_print(g2);
+                maximals(g2);
             }
             graph_free(g2);
         }
+    } else {
+        if (node_exist_set(g->valid_vertex, list_printed_graphs)) {
+            node_add_element(&list_printed_graphs, g->valid_vertex);
+            // Não funciona ainda.
+        }
+        
+        printf("\n_____MAXIMAL_____\n");
+        graph_print(g);
     }
+}
 
+int main () {
+    graph_t *g = graph_read_dimacs_file("ex1_new.col");
+    maximals(g);
     graph_free(g);
 
     return 0;
