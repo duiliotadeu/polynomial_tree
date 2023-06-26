@@ -2,17 +2,9 @@
 #include <stdlib.h>
 
 #include "graph.h"
-#include "node.h"
+#include "setlist.h"
 
-/* 
-    ANOTAÇÕES
-
-    Comparar os conjuntos utilizando a união e a intersecção. ?
-    Pensar no número de casos gerados pelo algoritmo no pior caso. 
-        Parece ser algo próximo de 2^n ainda.
-*/
-
-node_t* list_printed_graphs = NULL;
+setlist_t* maximal_list;
 
 int graph_find_vertex_with_max_edges(graph_t* graph) {
     int max_edges = 0;
@@ -88,17 +80,16 @@ void maximals(graph_t *g) {
             graph_free(g2);
         }
     } else {
-        if (node_exist_set(g->valid_vertex, list_printed_graphs)) {
-            node_add_element(&list_printed_graphs, g->valid_vertex);
-            // Não funciona ainda.
+        if (!isVertexListInSetList(maximal_list, g))
+        {
+            addToSetList(maximal_list, g);
+            graph_print(g);
         }
-        
-        printf("\n_____MAXIMAL_____\n");
-        graph_print(g);
     }
 }
 
 int main () {
+    maximal_list = setlist_create();
     graph_t *g = graph_read_dimacs_file("ex1_new.col");
     maximals(g);
     graph_free(g);
