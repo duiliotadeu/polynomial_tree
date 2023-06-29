@@ -645,6 +645,33 @@ void graph_print(graph_t *g) {
     return;
 }
 
+void graph_print_maximal(graph_t *g) {
+    int i;
+
+    ASSERT((sizeof(setelement) * 8) == ELEMENTSIZE);
+
+    if (g == NULL) {
+        printf("Grafo nulo!\n");
+        return;
+    }
+    if (g->n <= 0) {
+        printf("Número de vértices do grafo inválido!\n");
+        return;
+    }
+
+	printf("Conjunto maximal:\n");
+	printf("{ ");
+    for (i = 0; i < g->n; i++) {
+        if (!SET_CONTAINS_FAST(g->valid_vertex, i)) 
+			continue; // Ignorar vértices que não pertencem a valid_vertex
+
+        printf("%d ", i);
+    }
+	printf("}\n\n");
+
+    return;
+}
+
 
 /*
  * graph_test()

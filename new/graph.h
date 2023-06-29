@@ -43,6 +43,7 @@ extern boolean graph_write_dimacs_binary_file(graph_t *g, char *comment,
 					      char *file);
 
 extern void graph_print(graph_t *g);
+extern void graph_print_maximal(graph_t *g);
 extern boolean graph_test(graph_t *g, FILE *output);
 extern int graph_test_regular(graph_t *g);
 
