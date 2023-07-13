@@ -659,6 +659,7 @@ void graph_print_maximal(graph_t *g) {
         return;
     }
 
+	printf("%d", g->n);
 	printf("Conjunto maximal:\n");
 	printf("{ ");
     for (i = 0; i < g->n; i++) {
