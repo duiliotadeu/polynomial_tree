@@ -33,6 +33,8 @@ void setlist_add_element(setlist_t* list, graph_t* g) {
         current = current->next;
     }
 
+    printf("%d\n", set_size(new_set->elements));
+
     current->next = new_set;
 }
 

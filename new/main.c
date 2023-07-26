@@ -5,9 +5,9 @@
 #include "graph.h"
 #include "setlist.h"
 
+// Criar função para percorrer o setlist e determinar os conjuntos máximos.
+
 setlist_t* maximal_list;
-
-
 
 int graph_find_vertex_with_max_edges(graph_t* graph) {
     int max_edges = 0;
