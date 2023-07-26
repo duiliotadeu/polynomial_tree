@@ -3,7 +3,6 @@
 #define CLIQUER_MISC_H
 
 #include "cliquerconf.h"
-#include "sys\times.h"
 
 /*
  * We #define boolean instead of using a typedef because nauty.h uses it

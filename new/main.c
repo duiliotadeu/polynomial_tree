@@ -8,6 +8,8 @@
 // Criar função para percorrer o setlist e determinar os conjuntos máximos.
 
 setlist_t* maximal_list;
+set_t biggest_maximal;
+
 
 int graph_find_vertex_with_max_edges(graph_t* graph) {
     int max_edges = 0;
@@ -65,6 +67,11 @@ void graph_delete_neighbors_edges(graph_t *g, int v) {
 
 void graph_maximals(graph_t *g) {
     int vertex = graph_find_vertex_with_max_edges(g);
+
+    if (set_size(g->valid_vertex) < set_size(biggest_maximal))
+    {
+        return;
+    }
     
     if (!graph_is_empty(g)) {
         // Passo 1
@@ -83,10 +90,14 @@ void graph_maximals(graph_t *g) {
             graph_free(g2);
         }
     } else {
-        if (!setlist_exists_list(maximal_list, g))
+        if (set_size(g->valid_vertex) > set_size(biggest_maximal))
         {
-            setlist_add_element(maximal_list, g);
-            graph_print_maximal(g);
+           biggest_maximal = set_copy(NULL, g->valid_vertex);
+            if (!setlist_exists_list(maximal_list, g))
+            {
+                setlist_add_element(maximal_list, g);
+                set_print_maximal(g->valid_vertex);
+            }
         }
     }
 }
@@ -115,11 +126,15 @@ int main () {
 
     graph_t *g = graph_read_dimacs_file(full_path);
     maximal_list = setlist_create(g->n);
+    biggest_maximal = set_new(g->n);
 
     graph_print(g);
     printf("\n\n");
 
     graph_maximals(g);
+
+    printf("\n\n Maior: ");
+    set_print(biggest_maximal);
 
     graph_free(g);
 

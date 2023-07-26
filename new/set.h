@@ -384,4 +384,13 @@ static void set_print(set_t s) {
 	return;
 }
 
+static void set_print_maximal(set_t s) {
+	int i;
+	for (i=0; i<SET_MAX_SIZE(s); i++)
+		if (SET_CONTAINS(s,i))
+			printf(" %d",i);
+	printf("\n");
+	return;
+}
+
 #endif /* !CLIQUER_SET_H */
