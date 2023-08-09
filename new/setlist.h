@@ -92,3 +92,17 @@ void setlist_print(setlist_t* list) {
     }
 }
 
+void setlist_print_max(setlist_t* list, int size) {
+    if (list == NULL) {
+        printf("Erro: Lista de conjuntos invalida em setlist_print.\n");
+        return;
+    }
+
+    setlist_t* current = list->next;
+    while (current != NULL) {
+        if (set_size(current->elements) == size)
+            set_print_new(current->elements);
+        current = current->next;
+    }
+}
+

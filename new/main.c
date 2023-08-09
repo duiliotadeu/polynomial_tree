@@ -9,9 +9,8 @@ setlist_t* maximal_list;
 set_t biggest_maximal;
 
 // Pendências:
-//      Resolver problema de consumo de RAM.
+//      Resolver problema de consumo de RAM. -- Parcialmente resolvido.
 //      Isolar a biblioteca do cliquer.
-//      Melhorar a modularização.
 //      Documentar testes.
 
 int graph_find_vertex_with_max_edges(graph_t* graph) {
@@ -37,7 +36,7 @@ graph_t* graph_copy(graph_t* graph) {
     graph_t* new_graph = graph_new(graph->n); 
     
     for (int i = 0; i < graph->n; i++) {
-        new_graph->edges[i] = set_copy(NULL, graph->edges[i]);
+        new_graph->edges[i] = set_copy(new_graph->edges[i], graph->edges[i]); // Observar
         if (new_graph->edges[i] == NULL) {
             printf("Erro: Falha na alocacao de memoria em graph_copy (aresta %d).\n", i);
             graph_free(new_graph);
@@ -45,15 +44,12 @@ graph_t* graph_copy(graph_t* graph) {
         }
     }
 
-    new_graph->valid_vertex = set_copy(NULL, graph->valid_vertex);
+    new_graph->valid_vertex = set_copy(new_graph->valid_vertex, graph->valid_vertex); // Observar
     if (new_graph->valid_vertex == NULL) {
         printf("Erro: Falha na alocacao de memoria em graph_copy (vertices validos).\n");
         graph_free(new_graph);
         return NULL;
     }
-
-    // for (int i = 0; i < graph->n; i++) {
-    //     new_graph->weights[i] = graph->weights[i];
 
     return new_graph;
 }
@@ -101,10 +97,10 @@ void graph_maximals(graph_t *g) {
             graph_free(g2);
         }
     } else {
-        if (set_size(g->valid_vertex) > set_size(biggest_maximal)) {
-            biggest_maximal = set_copy(NULL, g->valid_vertex); 
-            if (!setlist_exists_list(maximal_list, g)) {
-                setlist_add_element(maximal_list, g);
+        if (!setlist_exists_list(maximal_list, g)) {
+            setlist_add_element(maximal_list, g);
+            if (set_size(g->valid_vertex) > set_size(biggest_maximal)) {
+                biggest_maximal = set_copy(biggest_maximal, g->valid_vertex); 
             }
         }
     }
@@ -166,6 +162,7 @@ int main(int argc, char* argv[]) {
     biggest_maximal = set_new(g->n);
 
     graph_maximals(g);
+
     graph_free(g);
 
     if (strcmp(argv[1], "-a") == 0) {
@@ -173,6 +170,9 @@ int main(int argc, char* argv[]) {
         set_print_new(biggest_maximal);
     } else if (strcmp(argv[1], "-b") == 0) {
         printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(biggest_maximal), set_size(g->valid_vertex));
+        setlist_print_max(maximal_list, set_size(biggest_maximal));
+    } else if (strcmp(argv[1], "-c") == 0) {
+        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(biggest_maximal), set_size(g->valid_vertex));
         setlist_print(maximal_list);
     } else {
         printf("Erro: Argumento invalido. Escolha -a ou -b.\n");
