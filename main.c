@@ -6,12 +6,14 @@
 #include "setlist.h"
 
 setlist_t* maximal_list;
-set_t biggest_maximal;
+set_t maximum;
 
 // Pendências:
 //      Resolver problema de consumo de RAM. -- Parcialmente resolvido.
 //      Isolar a biblioteca do cliquer.
 //      Documentar testes.
+//      Contar o número de grafos alocados, o número de maximais alocados e a quantidade de vezes que a função maximals é chamada (meu contador).
+//          A cada x iterações do contador, imprimir os dados acima e após isso, zerar o contador para repetir o ciclo.
 
 int graph_find_vertex_with_max_edges(graph_t* graph) {
     int max_edges = 0;
@@ -99,8 +101,8 @@ void graph_maximals(graph_t *g) {
     } else {
         if (!setlist_exists_list(maximal_list, g)) {
             setlist_add_element(maximal_list, g);
-            if (set_size(g->valid_vertex) > set_size(biggest_maximal)) {
-                biggest_maximal = set_copy(biggest_maximal, g->valid_vertex); 
+            if (set_size(g->valid_vertex) > set_size(maximum)) {
+                maximum = set_copy(maximum, g->valid_vertex); 
             }
         }
     }
@@ -159,25 +161,25 @@ int main(int argc, char* argv[]) {
     }
 
     maximal_list = setlist_create(g->n);
-    biggest_maximal = set_new(g->n);
+    maximum = set_new(g->n);
 
     graph_maximals(g);
 
-    graph_free(g);
-
     if (strcmp(argv[1], "-a") == 0) {
-        printf("A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(biggest_maximal), set_size(g->valid_vertex));
-        set_print_new(biggest_maximal);
+        printf("A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
+        set_print_new(maximum);
     } else if (strcmp(argv[1], "-b") == 0) {
-        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(biggest_maximal), set_size(g->valid_vertex));
-        setlist_print_max(maximal_list, set_size(biggest_maximal));
+        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_print_max(maximal_list, set_size(maximum));
     } else if (strcmp(argv[1], "-c") == 0) {
-        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(biggest_maximal), set_size(g->valid_vertex));
+        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
         setlist_print(maximal_list);
     } else {
         printf("Erro: Argumento invalido. Escolha -a ou -b.\n");
         return 1;
     }
+    
+    graph_free(g);
 
     return 0;
 }

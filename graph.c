@@ -58,6 +58,7 @@ void graph_free(graph_t *g) {
 	for (i=0; i < g->n; i++) {
 		set_free(g->edges[i]);
 	}
+	set_free(g->valid_vertex);
 	free(g->weights);
 	free(g->edges);
 	free(g);
