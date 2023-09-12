@@ -58,7 +58,6 @@ void graph_free(graph_t *g) {
 	for (i=0; i < g->n; i++) {
 		set_free(g->edges[i]);
 	}
-	set_free(g->valid_vertex);
 	free(g->weights);
 	free(g->edges);
 	free(g);
@@ -347,11 +346,6 @@ graph_t *graph_read_dimacs(FILE *fp) {
 	} else {
 		g=graph_read_dimacs_binary(fp,buffer);
 	}
-	
-	g->valid_vertex = set_new(g->n);
-	for (int i = 0; i < g->n; i++) {
-		SET_ADD_ELEMENT(g->valid_vertex, i);
-	} // Inicialização da estrutura valid_vertex.
 
 	return g;
 }	
@@ -647,35 +641,6 @@ void graph_print(graph_t *g) {
         printf("   WARNING: Total graph weight >= INT_MAX!\n");
     return;
 }
-
-void graph_print_maximal(graph_t *g) {
-    int i;
-
-    ASSERT((sizeof(setelement) * 8) == ELEMENTSIZE);
-
-    if (g == NULL) {
-        printf("Grafo nulo!\n");
-        return;
-    }
-    if (g->n <= 0) {
-        printf("Número de vértices do grafo inválido!\n");
-        return;
-    }
-
-	printf("%d", g->n);
-	printf("Conjunto maximal:\n");
-	printf("{ ");
-    for (i = 0; i < g->n; i++) {
-        if (!SET_CONTAINS_FAST(g->valid_vertex, i)) 
-			continue; // Ignorar vértices que não pertencem a valid_vertex
-
-        printf("%d ", i);
-    }
-	printf("}\n\n");
-
-    return;
-}
-
 
 /*
  * graph_test()

@@ -1,14 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "graph.h"
-#include "set.h"
+#include "cliquer/graph.h"
+#include "cliquer/set.h"
 
+/*
+ * setlist_t
+ *
+ * Represents a linked list structure for sets.
+ */
 typedef struct setlist {
     set_t elements;
     struct setlist* next;
 } setlist_t;
 
+/*
+ * setlist_create()
+ *
+ * Creates and initializes a new entry in the set list with a given size.
+ * Returns a pointer to the newly created setlist_t.
+ */
 setlist_t* setlist_create(int size) {
     setlist_t* list = (setlist_t*) malloc(sizeof(setlist_t));
     if (list == NULL) {
@@ -22,7 +33,12 @@ setlist_t* setlist_create(int size) {
     return list;
 }
 
-
+/*
+ * setlist_add_element()
+ *
+ * Adds a new set (graph) to the set list.
+ * Returns void.
+ */
 void setlist_add_element(setlist_t* list, graph_t* g) {
     if (list == NULL) {
         printf("Erro: Lista de conjuntos invalida em setlist_add_element.\n");
@@ -46,7 +62,12 @@ void setlist_add_element(setlist_t* list, graph_t* g) {
     current->next = new_set;
 }
 
-
+/*
+ * setlist_exists_list()
+ *
+ * Checks if a set (graph) already exists in the set list.
+ * Returns true if the set exists; otherwise, returns false.
+ */
 bool setlist_exists_list(setlist_t* list, graph_t* g) {
     if (list == NULL) {
         printf("Erro: Lista de conjuntos invalida em setlist_exists_list.\n");
@@ -79,6 +100,12 @@ bool setlist_exists_list(setlist_t* list, graph_t* g) {
     return false; 
 }
 
+/*
+ * setlist_print()
+ *
+ * Prints all sets (graphs) in the set list.
+ * Returns void.
+ */
 void setlist_print(setlist_t* list) {
     if (list == NULL) {
         printf("Erro: Lista de conjuntos invalida em setlist_print.\n");
@@ -92,6 +119,12 @@ void setlist_print(setlist_t* list) {
     }
 }
 
+/*
+ * setlist_print_max()
+ *
+ * Prints sets (graphs) in the set list with a specific size.
+ * Returns void.
+ */
 void setlist_print_max(setlist_t* list, int size) {
     if (list == NULL) {
         printf("Erro: Lista de conjuntos invalida em setlist_print.\n");
