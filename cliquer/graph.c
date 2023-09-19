@@ -34,7 +34,7 @@ graph_t *graph_new(int n) {
 	g->n=n;
 	g->edges=malloc(g->n * sizeof(set_t));
 	g->weights=malloc(g->n * sizeof(int));
-	g->valid_vertex=malloc(sizeof(set_t));
+	// g->valid_vertex=malloc(sizeof(set_t));
 	for (i=0; i < g->n; i++) {
 		g->edges[i]=set_new(n);
 		g->weights[i]=1;

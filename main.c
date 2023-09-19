@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <omp.h>
 
 #include "prografo.h"
 
 int main(int argc, char* argv[]) {
+
+    omp_set_num_threads(4);
+
     if (argc < 2) {
         printf("Erro: Insira pelo menos um argumento.\n");
         return 1;
@@ -34,7 +38,7 @@ int main(int argc, char* argv[]) {
     maximum = set_new(g->n);
 
     if (strcmp(argv[1], "-a") == 0) {
-        prografo_maximum(g, maximum);
+        prografo_maximum_paralel(g, maximum);
         printf("A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
         set_print_new(maximum);
     } else if (strcmp(argv[1], "-b") == 0) {
