@@ -95,6 +95,18 @@ char* prografo_reading_file_path(const char* file_name) {
  * MEMORY COPY AND RELEASE FUNCTIONS
  */
 
+/*
+ * prografo_new()
+ *
+ * Returns a newly allocated graph with n vertices all with weight 1,
+ * no edges and a empty valid_vertex.
+ */
+graph_t *prografo_new(int n) {
+    graph_t* g = graph_new(n); 
+    g->valid_vertex=set_new(n);
+    return g;
+}
+
 /* 
  * prografo_free()
  *
@@ -106,7 +118,6 @@ void prografo_free(graph_t *g) {
     return;
 }
 
-
 /* 
  * prografo_copy()
  *
@@ -114,7 +125,7 @@ void prografo_free(graph_t *g) {
  * Returns the copied graph.
  */
 graph_t* prografo_copy(graph_t* graph) {
-    graph_t* new_graph = graph_new(graph->n); 
+    graph_t* new_graph = prografo_new(graph->n); 
     
     for (int i = 0; i < graph->n; i++) {
         new_graph->edges[i] = set_copy(new_graph->edges[i], graph->edges[i]);
