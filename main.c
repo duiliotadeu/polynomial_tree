@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include <omp.h>
+#include <omp.h>
 
 #include "prografo.h"
 
 int main(int argc, char* argv[]) {
 
-    // omp_set_num_threads(4);
+    omp_set_num_threads(6);
 
     if (argc < 2) {
         printf("Erro: Insira pelo menos um argumento.\n");
@@ -36,11 +36,15 @@ int main(int argc, char* argv[]) {
     maximal_list = setlist_create(g->n);
     set_t maximum;
     maximum = set_new(g->n);
+    set_t* maximum_list = malloc(g->n * sizeof(set_t));
+    for (int i = 0; i < g->n; i++) {
+		maximum_list[i] = set_new(g->n);
+	}
 
     if (strcmp(argv[1], "-a") == 0) {
-        prografo_maximum(g, maximum);
-        printf("A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
-        set_print_new(maximum);
+        prografo_maximum_paralel(g, maximum_list);
+        printf("A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum_list[0]), set_size(g->valid_vertex));
+        set_print_new(maximum_list[0]);
     } else if (strcmp(argv[1], "-b") == 0) {
         prografo_maximals(g, maximal_list, maximum);
         printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(maximum), set_size(g->valid_vertex));

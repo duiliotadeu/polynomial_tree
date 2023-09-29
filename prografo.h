@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include <omp.h>
+#include <omp.h>
 
 #include "cliquer/graph.h"
 #include "setlist.h"
@@ -256,45 +256,46 @@ void prografo_maximum(graph_t *g, set_t maximum) {
     }
 }
 
-// void prografo_maximum_paralel(graph_t *g, set_t maximum) {
-//     if (g == NULL) {
-//         printf("Erro: Ponteiro de grafo NULL em prografo_maximum.\n");
-//         return;
-//     }
+void prografo_maximum_paralel(graph_t *g, set_t* maximum) {
+    if (g == NULL) {
+        printf("Erro: Ponteiro de grafo NULL em prografo_maximum.\n");
+        return;
+    }
 
-//     if (set_size(maximum) >= set_size(g->valid_vertex)) {
-//         return;
-//     }
+    int vertex = prografo_find_vertex_with_max_edges(g);
+    int i;
 
-//     int vertex = prografo_find_vertex_with_max_edges(g);
+    if (!prografo_is_empty(g)) {
+        #pragma omp parallel for default(none) shared(g, vertex, maximum)
+        
+            for (i = -1; i < g->n; i++) {
+                if ( i==-1 ) {
+                    graph_t *g1 = prografo_copy(g);
+                    set_t local_maximum = set_new(g->n);
+                    prografo_delete_neighbors_edges(g1, vertex);
+                    prografo_maximum(g1, local_maximum);
+                    prografo_free(g1); 
+                    maximum[i+1] = set_copy(maximum[i+1], local_maximum);
+                } else {
+                    graph_t *g2 = prografo_copy(g);
+                    set_t local_maximum = set_new(g->n);
+                    if (SET_CONTAINS(g2->edges[vertex], i)) {
+                        prografo_delete_neighbors_edges(g2, i);
+                        prografo_maximum(g2, local_maximum);
+                        maximum[i+1] = set_copy(maximum[i+1], local_maximum);
+                    }
+                    prografo_free(g2);
+                }
+            }
+        
+    }
 
-//     if (!prografo_is_empty(g)) {
-//         #pragma omp parallel
-//         {
-//             #pragma omp single nowait
-//             {
-//                 graph_t *g1 = prografo_copy(g);
-//                 prografo_delete_neighbors_edges(g1, vertex);
-//                 prografo_maximum(g1, maximum);
-//                 prografo_free(g1);
-//             }
-//         }
-
-//         #pragma omp parallel for
-//         for (int i = 0; i < g->n; i++) {
-//             graph_t *g2 = prografo_copy(g);
-//             if (SET_CONTAINS(g2->edges[vertex], i)) {
-//                 prografo_delete_neighbors_edges(g2, i);
-//                 prografo_maximum(g2, maximum);
-//             }
-//             prografo_free(g2);
-//         }
-//     } else {
-//         if (set_size(g->valid_vertex) > set_size(maximum)) {
-//             maximum = set_copy(maximum, g->valid_vertex);
-//         }
-//     }
-// }
+    for (int i = 0; i < g->n; i++) {
+        if (set_size(maximum[i]) > set_size(maximum[0])) {
+            maximum[0] = set_copy(maximum[0], maximum[i]);
+        }
+    }
+}
 
 
 /* 
