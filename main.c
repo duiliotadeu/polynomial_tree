@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[]) {
 
-    omp_set_num_threads(6);
+    //omp_set_num_threads(6);
 
     if (argc < 2) {
         printf("Erro: Insira pelo menos um argumento.\n");
@@ -36,8 +36,8 @@ int main(int argc, char* argv[]) {
     maximal_list = setlist_create(g->n);
     set_t maximum;
     maximum = set_new(g->n);
-    set_t* maximum_list = malloc(g->n * sizeof(set_t));
-    for (int i = 0; i < g->n; i++) {
+    set_t* maximum_list = malloc( (1+ (g->n)) * sizeof(set_t));
+    for (int i = 0; i < ((g->n) +1); i++) {
 		maximum_list[i] = set_new(g->n);
 	}
 

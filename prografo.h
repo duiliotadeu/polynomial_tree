@@ -266,17 +266,28 @@ void prografo_maximum_paralel(graph_t *g, set_t* maximum) {
     int i;
 
     if (!prografo_is_empty(g)) {
-        #pragma omp parallel for default(none) shared(g, vertex, maximum)
+        printf("Número de Ramos para o Loop: %d\n", 1+(g->n));
+        int numthreads;
+        numthreads=4;
+        #pragma omp parallel for default(none) shared(g, vertex, maximum) schedule(dynamic)
         
             for (i = -1; i < g->n; i++) {
+                int tid = omp_get_thread_num();
+                int total_threads = omp_get_num_threads();
+
+                // printf("Thread id: %d  :  Total %d\n", tid, total_threads);
+
                 if ( i==-1 ) {
+                    // printf("@ Executando Item %d de %d on Thread %d\n", i+1, 1+(g->n), tid );
                     graph_t *g1 = prografo_copy(g);
                     set_t local_maximum = set_new(g->n);
                     prografo_delete_neighbors_edges(g1, vertex);
                     prografo_maximum(g1, local_maximum);
                     prografo_free(g1); 
                     maximum[i+1] = set_copy(maximum[i+1], local_maximum);
+                    printf("* Executado Item %d de %d\n", i+1, 1+(g->n) );
                 } else {
+                    //printf("@ Executando Item %d de %d on Thread %d\n", i+1, 1+(g->n), tid );
                     graph_t *g2 = prografo_copy(g);
                     set_t local_maximum = set_new(g->n);
                     if (SET_CONTAINS(g2->edges[vertex], i)) {
@@ -285,9 +296,10 @@ void prografo_maximum_paralel(graph_t *g, set_t* maximum) {
                         maximum[i+1] = set_copy(maximum[i+1], local_maximum);
                     }
                     prografo_free(g2);
+                    printf("* Executado Item %d de %d da thread %d de %d\n", i+1, 1+(g->n) , tid, total_threads);
                 }
             }
-        
+        printf("Concluido o LOOP\n");
     }
 
     for (int i = 0; i < g->n; i++) {
