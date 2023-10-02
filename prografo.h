@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <omp.h>
 
 #include "cliquer/graph.h"
 #include "setlist.h"
@@ -95,6 +94,18 @@ char* prografo_reading_file_path(const char* file_name) {
  * MEMORY COPY AND RELEASE FUNCTIONS
  */
 
+/*
+ * prografo_new()
+ *
+ * Returns a newly allocated graph with n vertices all with weight 1,
+ * no edges and a empty valid_vertex.
+ */
+graph_t *prografo_new(int n) {
+    graph_t* g = graph_new(n); 
+    g->valid_vertex=set_new(n);
+    return g;
+}
+
 /* 
  * prografo_free()
  *
@@ -106,7 +117,6 @@ void prografo_free(graph_t *g) {
     return;
 }
 
-
 /* 
  * prografo_copy()
  *
@@ -114,7 +124,7 @@ void prografo_free(graph_t *g) {
  * Returns the copied graph.
  */
 graph_t* prografo_copy(graph_t* graph) {
-    graph_t* new_graph = graph_new(graph->n); 
+    graph_t* new_graph = prografo_new(graph->n); 
     
     for (int i = 0; i < graph->n; i++) {
         new_graph->edges[i] = set_copy(new_graph->edges[i], graph->edges[i]);
@@ -244,48 +254,6 @@ void prografo_maximum(graph_t *g, set_t maximum) {
         }
     }
 }
-
-
-void prografo_maximum_paralel(graph_t *g, set_t maximum) {
-    if (g == NULL) {
-        printf("Erro: Ponteiro de grafo NULL em prografo_maximum.\n");
-        return;
-    }
-
-    if (set_size(maximum) >= set_size(g->valid_vertex)) {
-        return;
-    }
-
-    int vertex = prografo_find_vertex_with_max_edges(g);
-
-    if (!prografo_is_empty(g)) {
-        #pragma omp parallel
-        {
-            #pragma omp single nowait
-            {
-                graph_t *g1 = prografo_copy(g);
-                prografo_delete_neighbors_edges(g1, vertex);
-                prografo_maximum(g1, maximum);
-                prografo_free(g1);
-            }
-        }
-
-        #pragma omp parallel for
-        for (int i = 0; i < g->n; i++) {
-            graph_t *g2 = prografo_copy(g);
-            if (SET_CONTAINS(g2->edges[vertex], i)) {
-                prografo_delete_neighbors_edges(g2, i);
-                prografo_maximum(g2, maximum);
-            }
-            prografo_free(g2);
-        }
-    } else {
-        if (set_size(g->valid_vertex) > set_size(maximum)) {
-            maximum = set_copy(maximum, g->valid_vertex);
-        }
-    }
-}
-
 
 /* 
  * prografo_maximals()
