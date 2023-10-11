@@ -42,10 +42,12 @@ int main(int argc, char* argv[]) {
     } else if (strcmp(argv[1], "-b") == 0) {
         prografo_maximals(g, maximal_list, maximum);
         printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_insertion_sort(maximal_list);
         setlist_print_max(maximal_list, set_size(maximum));
     } else if (strcmp(argv[1], "-c") == 0) {
         prografo_maximals(g, maximal_list, maximum);
         printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_insertion_sort(maximal_list);
         setlist_print(maximal_list);
     } else {
         printf("Erro: Argumento invalido. Escolha -a, -b ou -c.\n");
