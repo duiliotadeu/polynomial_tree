@@ -1,0 +1,43 @@
+/* Estilo para a janela principal */
+#main-window {
+    padding: 10px;
+}
+
+/* Estilo para os rótulos */
+#label-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#label-subtitle {
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#label-execution {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* Estilo para o botão de seleção de arquivo */
+#file-chooser {
+    padding: 5px;
+}
+
+/* Estilo para o botão de execução */
+#button-style {
+    color: #FFFFFF;
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background: #2ECC71; /* Cor de fundo */
+}
+
+#button-style :hover {
+    background: #27AE60; /* Cor de fundo ao passar o mouse */
+}
