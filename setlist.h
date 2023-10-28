@@ -113,7 +113,16 @@ void setlist_print(setlist_t* list) {
     }
 
     setlist_t* current = list->next;
+    int actual_size = 0;
+    bool set_size_printed = false;
+
     while (current != NULL) {
+        if (actual_size != set_size(current->elements)) {
+            actual_size = set_size(current->elements);
+            if (!set_size_printed) {
+                printf("n = %d\n", actual_size);
+            }
+        }
         set_print_new(current->elements);
         current = current->next;
     }
