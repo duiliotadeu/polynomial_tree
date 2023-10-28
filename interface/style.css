@@ -1,43 +1,74 @@
-/* Estilo para a janela principal */
-#main-window {
-    padding: 10px;
-}
-
-/* Estilo para os rótulos */
+/* Estilize o título */
 #label-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    padding: 5px;
+    font-size: 24px;
+    color: #ffffff;
 }
 
-#label-subtitle {
-    font-size: 14px;
-    margin-bottom: 10px;
-    padding: 5px;
+#label-status {
+    font-size: 18px;
+    color: #ffffff;
 }
 
-#label-execution {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 5px;
-}
-
-/* Estilo para o botão de seleção de arquivo */
+/* Estilize o seletor de arquivo */
 #file-chooser {
-    padding: 5px;
+    font-size: 16px;
+    background-color: #333;
+    border-radius: 2px;
 }
 
-/* Estilo para o botão de execução */
-#button-style {
-    color: #FFFFFF;
-    padding: 5px 10px;
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-    background: #2ECC71; /* Cor de fundo */
+/* Estilize os botões de seleção de tipo de execução */
+#radio-button {
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #333;
+    border-color: #333;
+    border-width: 3px;
+    border-style: solid;
 }
 
-#button-style :hover {
-    background: #27AE60; /* Cor de fundo ao passar o mouse */
+#radio-button:checked {
+    font-size: 14px;
+    background-color: #333;
+    border-color: #0078d4;
+    border-width: 3px;
+    border-style: solid;
+}
+
+#radio-button:hover {
+    background-color: #474747;
+    border-color: #0078d4;
+    border-width: 3px;
+    border-style: solid;
+}
+
+/* Estilize a barra de status */
+#status-bar {
+    background-color: #ffffff;
+    border-radius: 2px;
+    color: #333;
+}
+
+/* Estilize o botão "Iniciar" */
+#start-button {
+    background-color: #ffffff;
+    color: #333;
+}
+
+#start-button:hover {
+    background-color: #0078d4;
+    color: #ffffff;
+}
+
+#start-button, 
+#status-bar, 
+#button-box, 
+#file-chooser, 
+#label-title,
+#label-status {
+    padding: 6px 14px;
+}
+
+#label-description  {
+    padding: 10px 14px 4px 14px;
+    
 }
