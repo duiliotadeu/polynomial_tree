@@ -390,8 +390,8 @@ static void set_print_new(set_t s) {
 	printf("{");
 	for (i=0; i<SET_MAX_SIZE(s); i++)
 		if (SET_CONTAINS(s,i))
-			printf(" %d",i);
-	printf(" }\n");
+			printf(" %d,",i+1);
+	printf(" },\n");
 
 	return;
 }

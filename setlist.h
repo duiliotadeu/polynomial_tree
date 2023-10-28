@@ -113,7 +113,16 @@ void setlist_print(setlist_t* list) {
     }
 
     setlist_t* current = list->next;
+    int actual_size = 0;
+    bool set_size_printed = false;
+
     while (current != NULL) {
+        if (actual_size != set_size(current->elements)) {
+            actual_size = set_size(current->elements);
+            if (!set_size_printed) {
+                printf("n = %d\n", actual_size);
+            }
+        }
         set_print_new(current->elements);
         current = current->next;
     }
@@ -139,3 +148,41 @@ void setlist_print_max(setlist_t* list, int size) {
     }
 }
 
+/*
+ * setlist_insertion_sort()
+ *
+ * Sorts the setlist in ascending order based on the size of sets.
+ * Returns void.
+ */
+void setlist_insertion_sort(setlist_t* list) {
+    if (list == NULL) {
+        printf("Erro: Lista de conjuntos inválida em setlist_insertion_sort.\n");
+        return;
+    }
+
+    setlist_t* sorted = NULL;  // Lista vazia para os conjuntos ordenados
+
+    setlist_t* current = list->next;
+
+    while (current != NULL) {
+        setlist_t* next = current->next;
+
+        // Inserir o conjunto atual na lista ordenada
+        if (sorted == NULL || set_size(current->elements) <= set_size(sorted->elements)) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            setlist_t* search = sorted;
+            while (search->next != NULL && set_size(current->elements) > set_size(search->next->elements)) {
+                search = search->next;
+            }
+            current->next = search->next;
+            search->next = current;
+        }
+
+        current = next;
+    }
+
+    // Atualiza a lista original com os conjuntos ordenados
+    list->next = sorted;
+}
