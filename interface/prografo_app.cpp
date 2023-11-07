@@ -3,7 +3,7 @@
     #include <wx/wx.h>
 #endif
 
-extern "C" int texto(char *mensagem);
+// extern "C" int texto(char *mensagem); 
 
 wxString executionTypes[] = { 
         "-a", 
