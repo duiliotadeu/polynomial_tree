@@ -120,7 +120,7 @@ void setlist_print(setlist_t* list) {
         if (actual_size != set_size(current->elements)) {
             actual_size = set_size(current->elements);
             if (!set_size_printed) {
-                printf("n = %d\n", actual_size);
+                printf("\nn = %d\n", actual_size);
             }
         }
         set_print_new(current->elements);
@@ -149,6 +149,24 @@ void setlist_print_max(setlist_t* list, int size) {
 }
 
 /*
+ * set_compare_vertices()
+ *
+ * Compare the sets based on vertices.
+ * Returns a negative value if set1 < set2, 0 if set1 == set2, and a positive value if set1 > set2.
+ */
+int set_compare_vertices(set_t set1, set_t set2) {
+    for (int i = 0; i < SET_MAX_SIZE(set1); i++) {
+        if (SET_CONTAINS(set1, i) && !SET_CONTAINS(set2, i)) {
+            return -1; 
+        } else if (!SET_CONTAINS(set1, i) && SET_CONTAINS(set2, i)) {
+            return 1;   
+        }
+    }
+
+    return 0;  
+}
+
+/*
  * setlist_insertion_sort()
  *
  * Sorts the setlist in ascending order based on the size of sets.
@@ -160,20 +178,23 @@ void setlist_insertion_sort(setlist_t* list) {
         return;
     }
 
-    setlist_t* sorted = NULL;  // Lista vazia para os conjuntos ordenados
+    setlist_t* sorted = NULL; 
 
     setlist_t* current = list->next;
 
     while (current != NULL) {
         setlist_t* next = current->next;
 
-        // Inserir o conjunto atual na lista ordenada
-        if (sorted == NULL || set_size(current->elements) <= set_size(sorted->elements)) {
+        if (sorted == NULL || set_size(current->elements) < set_size(sorted->elements) ||
+            (set_size(current->elements) == set_size(sorted->elements) &&
+             set_compare_vertices(current->elements, sorted->elements) < 0)) {
             current->next = sorted;
             sorted = current;
         } else {
             setlist_t* search = sorted;
-            while (search->next != NULL && set_size(current->elements) > set_size(search->next->elements)) {
+            while (search->next != NULL && (set_size(current->elements) > set_size(search->next->elements) ||
+                                            (set_size(current->elements) == set_size(search->next->elements) &&
+                                             set_compare_vertices(current->elements, search->next->elements) > 0))) {
                 search = search->next;
             }
             current->next = search->next;
@@ -183,6 +204,5 @@ void setlist_insertion_sort(setlist_t* list) {
         current = next;
     }
 
-    // Atualiza a lista original com os conjuntos ordenados
     list->next = sorted;
 }
