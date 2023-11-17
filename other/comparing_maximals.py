@@ -12,10 +12,10 @@ def compare_maximals(maximal_list):
             maximal_B_counter += 1
 
         if len(similar_maximals) > 0:
-            print(f'{maximal_A_counter}: {maximal_A} - ', end='')
+            print(f'{maximal_A_counter}: {maximal_A}', end='\n')
 
             for maximal in similar_maximals:
-                print(f'{maximal[0]},', end=' ')
+                print(f'    {maximal[0]}: {maximal[1]},', end='\n')
 
             print('')
 
