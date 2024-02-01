@@ -106,7 +106,7 @@ bool setlist_exists_list(setlist_t* list, graph_t* g) {
  * Prints all sets (graphs) in the set list.
  * Returns void.
  */
-void setlist_print(setlist_t* list) {
+void setlist_print(FILE *arquivo, setlist_t* list) {
     if (list == NULL) {
         printf("Erro: Lista de conjuntos invalida em setlist_print.\n");
         return;
@@ -114,18 +114,30 @@ void setlist_print(setlist_t* list) {
 
     setlist_t* current = list->next;
     int actual_size = 0;
+    int old_size = 0;
     bool set_size_printed = false;
+    int counter;
 
     while (current != NULL) {
         if (actual_size != set_size(current->elements)) {
             actual_size = set_size(current->elements);
             if (!set_size_printed) {
-                printf("\nn = %d\n", actual_size);
+                if (old_size > 0) {
+                    fprintf(arquivo,"Total de elementos de %d vértices igual a: %d\n\n", old_size, counter);
+                }
+
+                fprintf(arquivo,"\nn = %d\n", actual_size);
+                counter = 0;
+                old_size = actual_size;
             }
         }
-        set_print_new(current->elements);
+        set_print_new(arquivo, current->elements);
         current = current->next;
+
+        counter++;
     }
+
+    fprintf(arquivo,"Total de elementos de %d vértices igual a: %d\n\n", old_size, counter);
 }
 
 /*
@@ -134,7 +146,7 @@ void setlist_print(setlist_t* list) {
  * Prints sets (graphs) in the set list with a specific size.
  * Returns void.
  */
-void setlist_print_max(setlist_t* list, int size) {
+void setlist_print_max(FILE *arquivo, setlist_t* list, int size) {
     if (list == NULL) {
         printf("Erro: Lista de conjuntos invalida em setlist_print.\n");
         return;
@@ -143,7 +155,7 @@ void setlist_print_max(setlist_t* list, int size) {
     setlist_t* current = list->next;
     while (current != NULL) {
         if (set_size(current->elements) == size)
-            set_print_new(current->elements);
+            set_print_new(arquivo, current->elements);
         current = current->next;
     }
 }
