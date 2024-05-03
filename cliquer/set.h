@@ -384,14 +384,14 @@ static void set_print(set_t s) {
 	return;
 }
 
-static void set_print_new(set_t s) {
+static void set_print_new(FILE *arquivo ,set_t s) {
 	int i;
 
-	printf("{");
+	fprintf(arquivo,"{");
 	for (i=0; i<SET_MAX_SIZE(s); i++)
 		if (SET_CONTAINS(s,i))
-			printf(" %d,",i+1);
-	printf(" },\n");
+			fprintf(arquivo," %d,",i+1);
+	fprintf(arquivo," },\n");
 
 	return;
 }
