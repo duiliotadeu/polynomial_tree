@@ -3,7 +3,7 @@
     #include <wx/wx.h>
 #endif
 
-// extern "C" int texto(char *mensagem); 
+extern "C" int texto(char *mensagem); 
 
 wxString executionTypes[] = { 
         "-a", 
@@ -183,7 +183,18 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& event)
     if (selectedFilePath == "") {
         UpdateStatus("ERRO: selecione um arquivo", wxColour(255, 255, 255), wxColour(255, 0, 0));
     } else {
-        UpdateStatus("EM PROGRESSO", wxColour(255, 255, 255), wxColour(65, 105, 225));
+        // const char* filePath = selectedFilePath.ToStdString().c_str();
+        // const char* executionType = selectedExecutionType.ToStdString().c_str();
+
+        // int result = run_prografo(executionType, filePath);
+
+        // if (result == 0) {
+        //     UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(0, 128, 0));
+        // } else {
+        //     UpdateStatus("ERRO: algo deu errado", wxColour(255, 255, 255), wxColour(255, 0, 0));
+        // }
     }
 }
+
+
 

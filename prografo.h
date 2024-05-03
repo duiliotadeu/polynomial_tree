@@ -9,6 +9,49 @@
  * GRAPH READING AND LOADING FUNCTIONS
  */
 
+/*
+ * run_prografo()
+ *
+ * The main function.
+ */
+
+int run_prografo(char* executionType, char* filePath) {
+    graph_t* g = prografo_read_dimacs_file(filePath);
+    free(filePath);
+    if (g == NULL) {
+        printf("Erro: Falha ao ler o grafo do arquivo.\n");
+        return 1;
+    }
+
+    setlist_t* maximal_list;
+    maximal_list = setlist_create(g->n);
+    set_t maximum;
+    maximum = set_new(g->n);
+
+    if (strcmp(executionType, "-a") == 0) {
+        prografo_maximum(g, maximum);
+        printf("A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
+        set_print_new(maximum);
+    } else if (strcmp(executionType, "-b") == 0) {
+        prografo_maximals(g, maximal_list, maximum);
+        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_insertion_sort(maximal_list);
+        setlist_print_max(maximal_list, set_size(maximum));
+    } else if (strcmp(executionType, "-c") == 0) {
+        prografo_maximals(g, maximal_list, maximum);
+        printf("A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_insertion_sort(maximal_list);
+        setlist_print(maximal_list);
+    } else {
+        printf("Erro: Argumento invalido. Escolha -a, -b ou -c.\n");
+        return 1;
+    }
+    
+    graph_free(g);
+
+    return 0;
+}
+
 /* 
  * prografo_read_dimacs()
  *
