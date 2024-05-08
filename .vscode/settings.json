@@ -1,5 +1,9 @@
 {
   "files.associations": {
-    "string": "cpp"
+    "string": "cpp",
+    "set.h": "c",
+    "stdlib.h": "c",
+    "array": "cpp",
+    "string_view": "cpp"
   }
 }

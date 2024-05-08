@@ -3,7 +3,9 @@
     #include <wx/wx.h>
 #endif
 
-extern "C" int texto(char *mensagem); 
+// #include "prografo.h"
+
+extern "C" int run_prografo(char* executionType, char* filePath);
 
 wxString executionTypes[] = { 
         "-a", 
@@ -183,16 +185,19 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& event)
     if (selectedFilePath == "") {
         UpdateStatus("ERRO: selecione um arquivo", wxColour(255, 255, 255), wxColour(255, 0, 0));
     } else {
-        // const char* filePath = selectedFilePath.ToStdString().c_str();
-        // const char* executionType = selectedExecutionType.ToStdString().c_str();
+        wxCharBuffer filePathBuffer = selectedFilePath.ToUTF8();
+        char* filePath = filePathBuffer.data();
 
-        // int result = run_prografo(executionType, filePath);
+        wxCharBuffer executionTypeBuffer = selectedExecutionType.ToUTF8();
+        char* executionType = executionTypeBuffer.data();
 
-        // if (result == 0) {
-        //     UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(0, 128, 0));
-        // } else {
-        //     UpdateStatus("ERRO: algo deu errado", wxColour(255, 255, 255), wxColour(255, 0, 0));
-        // }
+        int result = run_prografo(executionType, filePath);
+
+        if (result == 0) {
+            UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(0, 128, 0));
+        } else {
+            UpdateStatus("ERRO: algo deu errado", wxColour(255, 255, 255), wxColour(255, 0, 0));
+        }
     }
 }
 
