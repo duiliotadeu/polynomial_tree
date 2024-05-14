@@ -1,0 +1,12 @@
+A razao de independencia do grafo e 8/9 e os conjuntos independentes maximais sao: 
+
+
+n = 1
+{ 9, },
+Total de elementos de 1 vértices igual a: 1
+
+
+n = 8
+{ 1, 2, 3, 4, 5, 6, 7, 8, },
+Total de elementos de 8 vértices igual a: 1
+

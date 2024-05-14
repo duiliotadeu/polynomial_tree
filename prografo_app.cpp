@@ -14,7 +14,7 @@ wxString executionTypes[] = {
         "-d"
     };
 wxString executionTypesDescriptions[] = { 
-        "Encontrar um maximo (paralelizado);", 
+        "NOT WORKING - Encontrar um maximo (paralelizado)", 
         "Encontrar um maximo (linear)", 
         "Encontrar todos os maximos", 
         "Encontrar todos os maximais" 
@@ -182,9 +182,11 @@ void MainFrame::UpdateStatus(const wxString& label, const wxColour& textColour, 
 
 void MainFrame::OnStartButtonClicked(wxCommandEvent& event) 
 {
-    if (selectedFilePath == "") {
+    if (false) {
         UpdateStatus("ERRO: selecione um arquivo", wxColour(255, 255, 255), wxColour(255, 0, 0));
     } else {
+        UpdateStatus("EM PROGRESSO", wxColour(255, 255, 255), wxColour(0, 0, 255));
+
         wxCharBuffer filePathBuffer = selectedFilePath.ToUTF8();
         char* filePath = filePathBuffer.data();
 
@@ -194,12 +196,9 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& event)
         int result = run_prografo(executionType, filePath);
 
         if (result == 0) {
-            UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(0, 128, 0));
+            UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(0, 255, 0));
         } else {
             UpdateStatus("ERRO: algo deu errado", wxColour(255, 255, 255), wxColour(255, 0, 0));
         }
     }
 }
-
-
-
