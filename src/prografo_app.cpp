@@ -182,7 +182,7 @@ void MainFrame::UpdateStatus(const wxString& label, const wxColour& textColour, 
 
 void MainFrame::OnStartButtonClicked(wxCommandEvent& event) 
 {
-    if (false) {
+    if (selectedFilePath.empty()) {
         UpdateStatus("ERRO: selecione um arquivo", wxColour(255, 255, 255), wxColour(255, 0, 0));
     } else {
         UpdateStatus("EM PROGRESSO", wxColour(255, 255, 255), wxColour(0, 0, 255));
@@ -196,7 +196,7 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& event)
         int result = run_prografo(executionType, filePath);
 
         if (result == 0) {
-            UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(0, 255, 0));
+            UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(255, 0, 0));
         } else {
             UpdateStatus("ERRO: algo deu errado", wxColour(255, 255, 255), wxColour(255, 0, 0));
         }

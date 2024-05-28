@@ -1,4 +1,4 @@
-#include "prografo.h"
+#include "include/prografo.h"
 
 /*
  * GRAPH READING AND LOADING FUNCTIONS
@@ -22,9 +22,25 @@ int run_prografo(char* executionType, char* filePath) {
     set_t maximum;
     maximum = set_new(g->n);
 
+    char* fileName = strrchr(filePath, '/');
+    if (fileName == NULL) {
+        fileName = filePath; 
+    } else {
+        fileName++;
+    }
+
+    char* ext = strrchr(fileName, '.'); 
+    if (ext != NULL) {
+        *ext = '\0'; 
+    }
+
+    // Generate output file name
+    char outputFileName[strlen(fileName) + 12];
+    snprintf(outputFileName, sizeof(outputFileName), "%s-result.txt", fileName);
+
     FILE *arquivo;
 
-    arquivo = fopen("saida.txt", "w");
+    arquivo = fopen(outputFileName, "w");
 
     if (arquivo == NULL) {
         fprintf(stderr, "Erro ao abrir o arquivo.\n");

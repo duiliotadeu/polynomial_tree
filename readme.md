@@ -26,21 +26,23 @@ The **Prografo** provides the following command-line options:
 - `-b`: Find all maximal independent sets.
 - `-c`: Find all maximal independent sets and print them.
 
-Here's an example of how to use the software to find a maximum independent set:
-
-```shell
-./main.exe -a 
-```
-
 ## How to Compile
 
-To compile the Prografo, you can use the following command:
+To compile the Prografo, you can use the Makefile command:
 
 ```shell
-gcc -o main.exe main.c cliquer/graph.c
+make
 ```
 
-This command assumes that you have the C compiler (GCC) installed on your system.
+This command assumes that you have the C compiler (GCC) and the C++ compiler (C++) installed on your system.
+
+After compile, you can use:
+
+```shell
+make clean 
+```
+
+This command will remove the .o files.
 
 ## Graph Input Format
 
