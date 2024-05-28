@@ -22,6 +22,11 @@ int run_prografo(char* executionType, char* filePath) {
     set_t maximum;
     maximum = set_new(g->n);
 
+    set_t* maximum_list = malloc( (1+ (g->n)) * sizeof(set_t));
+    for (int i = 0; i < ((g->n) +1); i++) {
+		maximum_list[i] = set_new(g->n);
+	}
+
     char* fileName = strrchr(filePath, '/');
     if (fileName == NULL) {
         fileName = filePath; 
@@ -34,7 +39,6 @@ int run_prografo(char* executionType, char* filePath) {
         *ext = '\0'; 
     }
 
-    // Generate output file name
     char outputFileName[strlen(fileName) + 12];
     snprintf(outputFileName, sizeof(outputFileName), "%s-result.txt", fileName);
 
@@ -47,25 +51,29 @@ int run_prografo(char* executionType, char* filePath) {
         return 1; 
     }
 
-    if (strcmp(executionType, "-b") == 0) {
-            prografo_maximum(g, maximum);
-            fprintf(arquivo, "A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
-            set_print_new(arquivo, maximum);
-        } else if (strcmp(executionType, "-c") == 0) {
-            prografo_maximals(g, maximal_list, maximum);
-            fprintf(arquivo, "A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
-            setlist_insertion_sort(maximal_list);
-            setlist_print_max(arquivo, maximal_list, set_size(maximum));
-        } else if (strcmp(executionType, "-d") == 0) {
-            prografo_maximals(g, maximal_list, maximum);
-            fprintf(arquivo, "A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
-            setlist_insertion_sort(maximal_list);
-            setlist_print(arquivo, maximal_list);
-        } else {
-            printf("Erro: Argumento invalido. Escolha -b, -c ou -d. Argumento passado: %s\n", executionType);
-            fclose(arquivo);
-            graph_free(g);
-            return 1;
+    if (strcmp(executionType, "-a") == 0) {
+        prografo_maximum_paralel(g, &maximum);
+        fprintf(arquivo, "A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
+        set_print_new(arquivo, maximum);
+    } else if (strcmp(executionType, "-b") == 0) {
+        prografo_maximum(g, maximum);
+        fprintf(arquivo, "A razao de independencia do grafo e %d/%d e um conjunto independente maximo e: ", set_size(maximum), set_size(g->valid_vertex));
+        set_print_new(arquivo, maximum);
+    } else if (strcmp(executionType, "-c") == 0) {
+        prografo_maximals(g, maximal_list, maximum);
+        fprintf(arquivo, "A razao de independencia do grafo e %d/%d e os conjuntos independentes maximos sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_insertion_sort(maximal_list);
+        setlist_print_max(arquivo, maximal_list, set_size(maximum));
+    } else if (strcmp(executionType, "-d") == 0) {
+        prografo_maximals(g, maximal_list, maximum);
+        fprintf(arquivo, "A razao de independencia do grafo e %d/%d e os conjuntos independentes maximais sao: \n\n", set_size(maximum), set_size(g->valid_vertex));
+        setlist_insertion_sort(maximal_list);
+        setlist_print(arquivo, maximal_list);
+    } else {
+        printf("Erro: Argumento invalido. Escolha -b, -c ou -d. Argumento passado: %s\n", executionType);
+        fclose(arquivo);
+        graph_free(g);
+        return 1;
     }
   
     fclose(arquivo);
@@ -316,6 +324,55 @@ void prografo_maximum(graph_t *g, set_t maximum) {
     } else {
         if (set_size(g->valid_vertex) > set_size(maximum)) {
             maximum = set_copy(maximum, g->valid_vertex); 
+        }
+    }
+}
+
+void prografo_maximum_paralel(graph_t *g, set_t* maximum) {
+    if (g == NULL) {
+        printf("Erro: Ponteiro de grafo NULL em prografo_maximum.\n");
+        return;
+    }
+
+    int vertex = prografo_find_vertex_with_max_edges(g);
+    int i;
+
+    if (!prografo_is_empty(g)) {
+        printf("Número de Ramos para o Loop: %d\n", 1+(g->n));
+        int numthreads;
+        numthreads=4;
+        #pragma omp parallel for default(none) shared(g, vertex, maximum) schedule(dynamic)
+        
+            for (i = -1; i < g->n; i++) {
+                int tid = omp_get_thread_num();
+                int total_threads = omp_get_num_threads();
+
+                if ( i==-1 ) {
+                    printf("* Executado Item %d de %d\n", i+1, 1+(g->n) );
+                    graph_t *g1 = prografo_copy(g);
+                    set_t local_maximum = set_new(g->n);
+                    prografo_delete_neighbors_edges(g1, vertex);
+                    prografo_maximum(g1, local_maximum);
+                    prografo_free(g1); 
+                    maximum[i+1] = set_copy(maximum[i+1], local_maximum);
+                } else {
+                    printf("* Executado Item %d de %d da thread %d de %d\n", i+1, 1+(g->n) , tid, total_threads);
+                    graph_t *g2 = prografo_copy(g);
+                    set_t local_maximum = set_new(g->n);
+                    if (SET_CONTAINS(g2->edges[vertex], i)) {
+                        prografo_delete_neighbors_edges(g2, i);
+                        prografo_maximum(g2, local_maximum);
+                        maximum[i+1] = set_copy(maximum[i+1], local_maximum);
+                    }
+                    prografo_free(g2);
+                }
+            }
+        printf("Concluido o LOOP\n");
+    }
+
+    for (int i = 0; i < g->n; i++) {
+        if (set_size(maximum[i]) > set_size(maximum[0])) {
+            maximum[0] = set_copy(maximum[0], maximum[i]);
         }
     }
 }

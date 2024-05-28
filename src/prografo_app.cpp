@@ -176,7 +176,8 @@ void MainFrame::UpdateStatus(const wxString& label, const wxColour& textColour, 
         statusBarText->SetMinSize(wxSize(-1, -1));
         statusBarText->SetWindowStyle(wxALIGN_CENTER);
 
-        statusPanel->Layout();
+        statusPanel->Refresh();
+        statusPanel->Update();
     }
 }
 
@@ -196,7 +197,7 @@ void MainFrame::OnStartButtonClicked(wxCommandEvent& event)
         int result = run_prografo(executionType, filePath);
 
         if (result == 0) {
-            UpdateStatus("CONCLUÍDO", wxColour(255, 255, 255), wxColour(255, 0, 0));
+            UpdateStatus("CONCLUIDO", wxColour(255, 255, 255), wxColour(0, 255, 0));
         } else {
             UpdateStatus("ERRO: algo deu errado", wxColour(255, 255, 255), wxColour(255, 0, 0));
         }

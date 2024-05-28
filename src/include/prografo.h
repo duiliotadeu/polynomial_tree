@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <omp.h>
 
 #include "cliquer/graph.h"
 #include "setlist.h"
@@ -24,6 +25,7 @@ void prografo_delete_neighbors_edges(graph_t *g, int v);
 boolean prografo_is_empty(graph_t* graph);
 
 void prografo_maximum(graph_t *g, set_t maximum);
+void prografo_maximum_paralel(graph_t *g, set_t* maximum);
 void prografo_maximals(graph_t *g, setlist_t* maximal_list, set_t maximum);
 
 void prografo_print_maximal(graph_t *g);

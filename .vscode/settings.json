@@ -49,6 +49,12 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp",
-    "prografo.h": "c"
+    "prografo.h": "c",
+    "chrono": "cpp",
+    "ctime": "cpp",
+    "ratio": "cpp",
+    "semaphore": "cpp",
+    "stop_token": "cpp",
+    "thread": "cpp"
   }
 }
