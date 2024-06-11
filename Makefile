@@ -3,7 +3,7 @@ TARGET = prografo_app
 CC = gcc
 CXX = g++
 
-WXFLAGS = `wx-config --cxxflags --libs`
+WXFLAGS = `wx-config --static --cxxflags --libs`
 OMPFLAGS = -fopenmp
 
 SRC_DIR = src
@@ -30,6 +30,6 @@ $(CLIQ_DIR)/graph.o: $(CLIQ_DIR)/graph.c $(CLIQ_DIR)/graph.h
 	$(CC) -c $(CLIQ_DIR)/graph.c -I$(INCLUDE_DIR) -o $(CLIQ_DIR)/graph.o
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) 
 
 .PHONY: all clean

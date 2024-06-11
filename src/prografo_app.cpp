@@ -14,7 +14,7 @@ wxString executionTypes[] = {
         "-d"
     };
 wxString executionTypesDescriptions[] = { 
-        "NOT WORKING - Encontrar um maximo (paralelizado)", 
+        "Encontrar um maximo (paralelizado)", 
         "Encontrar um maximo (linear)", 
         "Encontrar todos os maximos", 
         "Encontrar todos os maximais" 
