@@ -14,7 +14,7 @@ The **Prografo** is a software tool designed to find maximum independent sets in
 
 ## Installation
 
-To use the **Prografo**, you need to have a C compiler installed on your system. Additionally, this software depends on the **CLIQUE** library for some of its functionalities. You can find the **CLIQUE** library on [GitHub](https://github.com/danuta82/cliquer).
+To use the **Prografo**, you need to have a C compiler installed on your system. Additionally, this software depends on the **CLIQUE** library for some of its functionalities. You can find the **CLIQUE** library on the [Software Page](https://users.aalto.fi/~pat/cliquer.html).
 
 You can compile the software as described in the [How to Compile](#how-to-compile) section.
 
