@@ -31,18 +31,10 @@ The **Prografo** provides the following command-line options:
 To compile the Prografo, you can use the Makefile command:
 
 ```shell
-make
+cmake -G Ninja -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++
+
+Ninja
 ```
-
-This command assumes that you have the C compiler (GCC) and the C++ compiler (C++) installed on your system.
-
-After compile, you can use:
-
-```shell
-make clean 
-```
-
-This command will remove the .o files.
 
 ## Graph Input Format
 
