@@ -28,12 +28,16 @@ The **Prografo** provides the following command-line options:
 
 ## How to Compile
 
-To compile the Prografo, you can use the Makefile command:
+To compile the Prografo, run:
 
 ```shell
-cmake -G Ninja -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++
-
-Ninja
+gcc -shared -o src/prografo.dll src/prografo.c src/setlist.c src/include/cliquer/graph.c -fopenmp -lstdc++
+```
+```shell
+python prografo_app_new.py
+```
+```shell
+pyinstaller --onefile --add-binary "C:\Users\joaov\Projetos\prografo\src\prografo.dll;." prografo_app_new.py
 ```
 
 ## Graph Input Format
